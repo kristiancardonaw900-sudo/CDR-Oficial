@@ -1,0 +1,865 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#141414">
+  <meta name="description" content="Calzado para toda la familia en CDR, Jambaló.">
+  <title>CDR | Tu estilo, nuestra pasión</title>
+  <script>document.documentElement.classList.add('js');</script>
+  <style>
+    :root{color-scheme:dark;--ink:#161615;--ink-2:#20201e;--cream:#f2eee8;--white:#fff;--muted:#d9d4ce;--gold:#d3a867;--line:rgba(255,255,255,.2);--ease:cubic-bezier(.22,.72,.2,1);--nav-h:66px}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth;scrollbar-color:#76634c #171717}
+    body{margin:0;background:var(--ink);color:var(--white);font-family:Arial,Helvetica,sans-serif;overflow-x:clip}
+    button{font:inherit}
+    .skip{position:fixed;left:12px;top:12px;z-index:100;padding:12px 16px;background:#fff;color:#111;transform:translateY(-160%)}
+    .skip:focus{transform:none}
+    .hero-track{position:relative;height:400vh;height:400svh;z-index:1}
+    .hero-stage{position:sticky;top:0;height:100vh;height:100svh;min-height:520px;overflow:hidden;background:#131312;isolation:isolate}
+    .hero-poster,.hero-video,.hero-shade{position:absolute;inset:0;width:100%;height:100%}
+    .hero-poster{z-index:-3;background-image:url('assets/hero-poster.png');background-size:cover;background-position:50% 50%;transform:scale(1.015)}
+    .hero-video{z-index:-2;object-fit:cover;object-position:50% 50%;opacity:0;transform:translateZ(0);will-change:transform,opacity;transition:opacity .8s var(--ease)}
+    .hero-stage.video-ready .hero-video{opacity:1}
+    .hero-shade{z-index:-1;pointer-events:none;background:linear-gradient(90deg,rgba(7,7,7,.80) 0%,rgba(7,7,7,.58) 27%,rgba(7,7,7,.12) 58%,rgba(7,7,7,.06) 100%),linear-gradient(180deg,rgba(5,5,5,.42) 0%,transparent 24%,transparent 61%,rgba(5,5,5,.46) 100%);opacity:.92;transition:opacity .3s linear}
+    .hero-stage.loading .hero-shade{opacity:.78}
+    .site-nav{position:fixed;z-index:30;top:0;left:0;right:0;min-height:var(--nav-h);display:grid;grid-template-columns:1fr auto 1fr;align-items:center;padding:7px clamp(24px,6vw,100px);background:linear-gradient(180deg,rgba(10,10,10,.42),rgba(10,10,10,0));opacity:0;transform:translateY(-12px);transition:opacity .35s var(--ease),transform .35s var(--ease),background .35s var(--ease);pointer-events:none}
+    .site-nav.revealed{opacity:1;transform:none;pointer-events:auto}
+    .site-nav.scrolled{background:rgba(17,17,16,.82);backdrop-filter:blur(14px);border-bottom:1px solid rgba(255,255,255,.1)}
+    .brand-mark{width:72px;height:48px;object-fit:contain;filter:brightness(0) invert(1);justify-self:start}
+    .nav-links{display:flex;align-items:center;gap:clamp(20px,4.2vw,68px);padding:0;margin:0;list-style:none}
+    .nav-links span{position:relative;display:inline-block;padding:10px 0;color:rgba(255,255,255,.91);font-size:15px;letter-spacing:.01em}
+    .nav-links .active::after{content:"";position:absolute;left:0;right:0;bottom:2px;height:2px;background:#fff}
+    .contact-outline{justify-self:end;min-height:48px;padding:0 23px;border:1px solid rgba(255,255,255,.78);border-radius:28px;background:rgba(0,0,0,.08);color:#fff;display:inline-flex;align-items:center;gap:10px;letter-spacing:.01em}
+    .contact-outline svg{width:21px;height:21px}
+    .hero-copy{position:absolute;left:clamp(24px,6vw,102px);top:46%;width:min(48vw,730px);transform:translateY(-41%);}
+    .hero-copy .eyebrow,.hero-copy h1,.hero-copy .lede,.hero-actions,.benefits{opacity:0;visibility:hidden;will-change:opacity,transform}
+    .hero-copy .eyebrow{margin:0 0 22px;color:#fff;font-size:clamp(.66rem,.95vw,.84rem);letter-spacing:.34em;text-transform:uppercase}
+    h1{margin:0;max-width:15ch;font-family:Georgia,'Times New Roman',serif;font-weight:500;font-size:clamp(3.4rem,7.2vw,7.8rem);line-height:.91;letter-spacing:-.055em;text-wrap:balance;text-shadow:0 3px 26px rgba(0,0,0,.26)}
+    .hero-copy .lede{max-width:36ch;margin:24px 0 0;color:rgba(255,255,255,.94);font-size:clamp(1rem,1.55vw,1.35rem);line-height:1.48;text-shadow:0 2px 14px rgba(0,0,0,.42)}
+    .hero-actions{display:flex;flex-wrap:wrap;gap:14px;margin-top:32px;pointer-events:none}
+    .hero-actions.enabled{pointer-events:auto}
+    .btn{min-height:56px;padding:0 26px;border-radius:999px;display:inline-flex;align-items:center;justify-content:center;gap:18px;border:1px solid rgba(255,255,255,.82);background:transparent;color:#fff;font-size:.98rem;font-weight:600;letter-spacing:.005em;transition:transform .25s var(--ease),background .25s var(--ease),color .25s var(--ease),border-color .25s var(--ease)}
+    .btn .arrow{font-size:1.25rem;line-height:1;font-weight:400}
+    .btn-primary{min-width:228px;background:#fff;color:#171717;border-color:#fff}
+    .btn-secondary{min-width:194px;background:rgba(9,9,9,.18);backdrop-filter:blur(6px)}
+    .btn:hover{transform:translateY(-2px)}
+    .btn-secondary:hover{background:rgba(255,255,255,.16)}
+    .benefits{position:absolute;left:clamp(24px,5vw,84px);bottom:clamp(18px,2.8vh,26px);display:flex;align-items:center;width:min(820px,calc(100% - 48px));min-height:86px;padding:10px 14px;border:1px solid rgba(255,255,255,.18);border-radius:16px;background:rgba(26,25,24,.54);backdrop-filter:blur(12px)}
+    .benefit{display:flex;align-items:center;gap:13px;flex:1;min-width:0;padding:8px 15px}
+    .benefit+.benefit{border-left:1px solid rgba(255,255,255,.25)}
+    .benefit svg{flex:0 0 34px;width:34px;height:34px;stroke:#fff;stroke-width:1.7;fill:none;stroke-linecap:round;stroke-linejoin:round}
+    .benefit strong,.benefit span{display:block;font-size:.9rem;line-height:1.35}
+    .benefit span{margin-top:3px;color:rgba(255,255,255,.74);font-size:.82rem}
+    .page-section{position:relative;padding:clamp(78px,10vw,144px) clamp(24px,7vw,112px)}
+    .section-kicker{margin:0 0 16px;color:#a78556;font-size:.73rem;letter-spacing:.25em;text-transform:uppercase}
+    .section-title{max-width:14ch;margin:0;font-family:Georgia,'Times New Roman',serif;font-size:clamp(2.8rem,5.5vw,5.8rem);font-weight:400;line-height:.98;letter-spacing:-.045em}
+    .section-lede{max-width:58ch;color:#bdb8b1;font-size:1.06rem;line-height:1.75}
+    .audience-track{position:relative;height:520vh;height:520svh;background:#151514;color:#fff;isolation:isolate}
+    .audience-stage{position:sticky;top:0;height:100vh;height:100svh;min-height:540px;overflow:hidden;background:#151514;isolation:isolate}
+    .audience-backdrop,.audience-backdrop::before,.audience-backdrop::after{position:absolute;inset:0}
+    .audience-backdrop{z-index:-1;overflow:hidden;background:#171716}
+    .audience-backdrop::before{content:"";background:url('assets/familias/fondo-tienda.png') center/cover no-repeat;filter:blur(5px) brightness(.43) saturate(.7);transform:scale(1.06)}
+    .audience-backdrop::after{content:"";background:linear-gradient(180deg,rgba(9,9,9,.58),rgba(9,9,9,.22) 44%,rgba(9,9,9,.72)),linear-gradient(90deg,rgba(10,10,10,.34),transparent 50%,rgba(10,10,10,.34))}
+    .audience-kicker{position:absolute;top:7.5%;left:20px;right:20px;text-align:center;color:rgba(255,255,255,.8);font-size:.7rem;letter-spacing:.28em;text-transform:uppercase}
+    .audience-groups{position:absolute;inset:0}
+    .audience-group{position:absolute;inset:0;visibility:hidden;opacity:0;pointer-events:none}
+    .audience-copy{position:absolute;top:13%;left:20px;right:20px;text-align:center;opacity:0;transform:translateY(14px)}
+    .audience-copy h2{margin:0;font:400 clamp(2.8rem,5.5vw,5.5rem)/.98 Georgia,'Times New Roman',serif;letter-spacing:-.045em;text-shadow:0 4px 24px rgba(0,0,0,.34)}
+    .audience-copy p{margin:12px 0 0;color:rgba(255,255,255,.84);font-size:clamp(.92rem,1.3vw,1.08rem);text-shadow:0 2px 14px rgba(0,0,0,.4)}
+    .audience-photo{position:absolute;top:39%;width:min(42vw,610px);height:46vh;max-height:480px;object-fit:cover;object-position:center;border:1px solid rgba(255,255,255,.32);border-radius:10px;box-shadow:0 24px 70px rgba(0,0,0,.42);opacity:0;visibility:hidden;will-change:transform,opacity}
+    .audience-photo.left{left:5vw;top:39%}
+    .audience-photo.right{right:5vw;top:43%}
+    .audience-photo img{display:block;width:100%;height:100%;object-fit:cover;border-radius:inherit}
+    .audience-scroll-note{position:absolute;left:0;right:0;bottom:3.5%;text-align:center;color:rgba(255,255,255,.58);font-size:.62rem;letter-spacing:.2em;text-transform:uppercase}
+    .jambalo-track{position:relative;height:380vh;height:380svh;background:#121211;color:#fff;isolation:isolate}
+    .jambalo-stage{position:sticky;top:0;height:100vh;height:100svh;min-height:540px;overflow:hidden;background:#121211;isolation:isolate}
+    .jambalo-poster,.jambalo-video,.jambalo-shade{position:absolute;inset:0;width:100%;height:100%}
+    .jambalo-poster{z-index:0;background:url('assets/jambalo.png') center/cover no-repeat;filter:brightness(.7);transform:scale(1.02)}
+    .jambalo-video{z-index:1;object-fit:cover;object-position:center;opacity:0;will-change:opacity;transition:opacity .8s var(--ease)}
+    .jambalo-stage.video-ready .jambalo-video{opacity:1}
+    .jambalo-shade{z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(8,9,10,.76),rgba(8,9,10,.48) 31%,rgba(8,9,10,.08) 68%,rgba(8,9,10,.03)),linear-gradient(0deg,rgba(7,8,9,.34),transparent 42%,rgba(7,8,9,.12))}
+    .jambalo-copy{position:absolute;z-index:3;left:clamp(24px,8vw,128px);top:50%;width:min(540px,42vw);transform:translateY(-50%);text-align:left;text-shadow:0 2px 22px rgba(0,0,0,.45)}
+    .jambalo-kicker{margin:0 0 18px;color:rgba(255,255,255,.78);font-size:.72rem;letter-spacing:.27em;text-transform:uppercase}
+    .jambalo-copy h2{max-width:10ch;margin:0;font:400 clamp(3.6rem,8vw,8rem)/.91 Georgia,'Times New Roman',serif;letter-spacing:-.055em;text-wrap:balance}
+    .jambalo-copy h2 span{display:block;font-size:.52em;line-height:1.04;letter-spacing:-.035em}
+    .jambalo-copy p:last-child{max-width:40ch;margin:24px 0 0;color:rgba(255,255,255,.92);font-size:clamp(.98rem,1.35vw,1.15rem);line-height:1.7;opacity:0;transform:translateY(18px);will-change:opacity,transform}
+    .jambalo-scroll-note{position:absolute;z-index:3;left:0;right:0;bottom:4%;text-align:center;color:rgba(255,255,255,.68);font-size:.61rem;letter-spacing:.2em;text-transform:uppercase}
+    .brands-track{position:relative;z-index:2;height:720vh;height:720svh;background:#fff;color:#171715;isolation:isolate}
+    .brands-stage{position:sticky;top:0;height:100vh;height:100svh;min-height:560px;overflow:hidden;background:#faf9f6;isolation:isolate;box-shadow:0 -18px 58px rgba(255,255,255,.22)}
+    .brands-panel{position:absolute;inset:0;z-index:1;overflow:hidden;background:#faf9f6;will-change:transform;mask-image:linear-gradient(180deg,transparent 0,#000 7vh);-webkit-mask-image:linear-gradient(180deg,transparent 0,#000 7vh)}
+    .brands-video,.brands-wash{position:absolute;inset:0;width:100%;height:100%}
+    .brands-video{z-index:0;object-fit:cover;object-position:center}
+    .brands-wash{z-index:1;background:rgba(255,255,255,.12);pointer-events:none}
+    .brands-heading{position:absolute;z-index:4;top:clamp(70px,12vh,126px);left:24px;right:24px;text-align:center;pointer-events:none}
+    .brands-heading .section-kicker{color:#8d6c43}
+    .brands-heading .section-title{max-width:none;margin-inline:auto;font-size:clamp(2.6rem,5.3vw,5.4rem)}
+    .brands-intro{max-width:52ch;margin:15px auto 0;color:#48443f;font-size:clamp(.94rem,1.22vw,1.06rem);line-height:1.65}
+    .brand-groups{position:absolute;z-index:5;inset:0;pointer-events:none}
+    .brand-group{position:absolute;top:57%;left:50%;display:flex;align-items:center;justify-content:center;gap:clamp(38px,8vw,140px);width:min(1180px,90vw);transform:translate(-50%,-50%);opacity:0;visibility:hidden}
+    .brand-logo{display:block;width:min(38vw,440px);height:clamp(145px,25vh,260px);object-fit:contain;opacity:0;visibility:hidden;will-change:transform,opacity;filter:drop-shadow(0 2px 3px rgba(0,0,0,.06))}
+    .brand-logo.wide{width:min(42vw,500px)}
+    .brand-logo.compact{width:min(29vw,320px)}
+    .brand-group.single{top:58%}
+    .brand-group.single .brand-logo{width:min(45vw,420px);height:min(38vh,360px)}
+    .brands-controls{position:absolute;z-index:6;left:24px;right:24px;bottom:clamp(24px,5vh,52px);display:grid;justify-items:center;gap:12px;color:rgba(25,24,22,.76);font-size:.68rem;letter-spacing:.19em;text-transform:uppercase}
+    .brands-step{font-variant-numeric:tabular-nums}
+    .brands-progress{width:min(190px,38vw);height:1px;background:rgba(25,24,22,.22);overflow:hidden}
+    .brands-progress span{display:block;width:0;height:100%;background:#282724;transform-origin:left center}
+    .products{background:var(--cream);color:#1c1b19}
+    .products .section-kicker{color:#8d6c43}
+    .products-head{display:flex;align-items:end;justify-content:space-between;gap:32px;margin-bottom:46px}
+    .products .section-lede{max-width:38ch;margin:0 0 4px;color:#69635c}
+    .product-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:24px}
+    .product-card{position:relative;min-height:360px;overflow:hidden;background:#e4e0da;border-radius:4px;color:#1b1b19}
+    .product-card img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:transform .8s var(--ease)}
+    .product-card.adidas img{object-fit:contain;padding:32px;background:radial-gradient(circle at 50% 50%,#f2f0ea,#d7d5ce 76%)}
+    .product-card:hover img{transform:scale(1.035)}
+    .product-card::after{content:"";position:absolute;inset:45% 0 0;background:linear-gradient(transparent,rgba(9,9,9,.72))}
+    .product-meta{position:absolute;z-index:1;left:28px;right:28px;bottom:25px;color:#fff;display:flex;align-items:end;justify-content:space-between;gap:16px}
+    .product-meta small{display:block;margin-bottom:8px;color:rgba(255,255,255,.72);font-size:.68rem;letter-spacing:.2em;text-transform:uppercase}
+    .product-meta h3{margin:0;font-family:Georgia,'Times New Roman',serif;font-weight:400;font-size:clamp(1.6rem,3vw,2.5rem)}
+    .product-meta .arrow{font-size:1.6rem}
+    .products-note{margin:20px 0 0;color:#817a70;font-size:.83rem}
+    .story{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,.8fr);gap:clamp(38px,9vw,140px);align-items:center;background:#191918}
+    .story-copy{max-width:570px}
+    .story-copy p:not(.section-kicker){color:#c2bdb7;font-size:1.06rem;line-height:1.8}
+    .story-image{width:100%;min-height:420px;height:clamp(420px,48vw,620px);object-fit:cover;object-position:center;border-radius:3px;filter:saturate(.85)}
+    .location-track{position:relative;height:360vh;height:360svh;background:#121211;color:#fff;isolation:isolate}
+    .location-stage{position:sticky;top:0;height:100vh;height:100svh;min-height:540px;overflow:hidden;background:#121211;isolation:isolate}
+    .location-poster,.location-video,.location-shade{position:absolute;inset:0;width:100%;height:100%}
+    .location-poster{z-index:0;background:url('assets/location-poster.jpg') center/cover no-repeat;filter:brightness(.72);transform:scale(1.02)}
+    .location-video{z-index:1;display:block;object-fit:cover;object-position:center;opacity:0;will-change:opacity;transition:opacity .75s var(--ease)}
+    .location-stage.video-ready .location-video{opacity:1}
+    .location-shade{z-index:2;pointer-events:none;background:linear-gradient(90deg,rgba(7,8,8,.78),rgba(7,8,8,.5) 34%,rgba(7,8,8,.1) 70%,rgba(7,8,8,.02)),linear-gradient(0deg,rgba(5,6,6,.4),transparent 48%,rgba(5,6,6,.16))}
+    .location-copy{position:absolute;z-index:3;left:clamp(24px,8vw,128px);top:50%;width:min(600px,46vw);transform:translateY(-50%);text-align:left;text-shadow:0 2px 22px rgba(0,0,0,.42)}
+    .location-copy [data-location-reveal]{opacity:0;visibility:hidden;transform:translateY(18px);will-change:opacity,transform}
+    .location-copy .section-kicker{color:rgba(255,255,255,.8)}
+    .location-copy .section-title{max-width:11ch;font-size:clamp(3.4rem,7vw,7.2rem);line-height:.95}
+    .location-copy .location-lede{max-width:42ch;margin:22px 0 0;color:rgba(255,255,255,.92);font-size:clamp(.98rem,1.35vw,1.16rem);line-height:1.7;opacity:0;transform:translateY(18px);will-change:opacity,transform}
+    .location-cta{display:inline-flex;align-items:center;justify-content:center;gap:15px;min-height:60px;margin-top:30px;padding:0 30px;border:1px solid #fff;border-radius:999px;background:#fff;color:#171715;font-size:1rem;font-weight:700;text-decoration:none;box-shadow:0 12px 34px rgba(0,0,0,.16);opacity:0;transform:translateY(18px);visibility:hidden;pointer-events:none;will-change:opacity,transform}
+    .location-cta.enabled{pointer-events:auto}
+    .location-cta .arrow{font-size:1.3rem;font-weight:400}
+    .location-scroll-note{position:absolute;z-index:3;left:0;right:0;bottom:4%;text-align:center;color:rgba(255,255,255,.68);font-size:.61rem;letter-spacing:.2em;text-transform:uppercase}
+    .footer{display:flex;justify-content:space-between;align-items:center;gap:30px;padding:34px clamp(24px,7vw,112px);background:#10100f;color:#9b958d;font-size:.78rem}
+    .footer img{width:54px;height:42px;object-fit:contain;filter:brightness(0) invert(1);opacity:.88}
+    .reveal-on-view{opacity:0;transform:translateY(24px);transition:opacity .75s var(--ease),transform .75s var(--ease)}
+    .reveal-on-view.in-view{opacity:1;transform:none}
+    :focus-visible{outline:2px solid var(--gold);outline-offset:4px}
+    .js .hero-actions button{cursor:default}
+    html:not(.js) .site-nav{opacity:1;transform:none;pointer-events:auto}
+    html:not(.js) .hero-copy .eyebrow,html:not(.js) .hero-copy h1,html:not(.js) .hero-copy .lede,html:not(.js) .hero-actions,html:not(.js) .benefits{opacity:1;visibility:visible}
+    html:not(.js) [data-location-reveal],html:not(.js) .location-copy .location-lede,html:not(.js) .location-cta{opacity:1;visibility:visible;transform:none;pointer-events:auto}
+    html:not(.js) .reveal-on-view{opacity:1;transform:none}
+    @media (max-width:980px){:root{--nav-h:62px}.site-nav{grid-template-columns:1fr auto;padding:5px 24px}.nav-links{display:none}.brand-mark{width:64px;height:44px}.hero-copy{width:min(58vw,610px);left:5vw}.benefits{left:5vw;width:min(780px,90vw)}.benefit{gap:11px;padding-inline:12px}.benefit svg{width:31px;height:31px;flex-basis:31px}.benefit strong{font-size:.82rem}.benefit span{font-size:.73rem}.story{grid-template-columns:1fr .85fr;gap:42px}}
+    @media (max-width:640px){:root{--nav-h:56px}.hero-track{height:360vh;height:360svh}.hero-stage{min-height:560px}.hero-video,.hero-poster{object-position:64% center}.hero-shade{background:linear-gradient(180deg,rgba(5,5,5,.4),transparent 22%,rgba(5,5,5,.12) 42%,rgba(5,5,5,.82) 100%),linear-gradient(90deg,rgba(7,7,7,.22),transparent 78%)}.site-nav{padding:5px 18px}.brand-mark{width:52px;height:40px}.contact-outline{min-height:38px;padding:0 13px;font-size:.75rem}.contact-outline svg{width:17px;height:17px}.hero-copy{left:22px;right:22px;top:auto;bottom:clamp(185px,25vh,225px);width:auto;transform:none}.hero-copy .eyebrow{margin-bottom:12px;font-size:.58rem;letter-spacing:.24em}.hero-copy h1{max-width:11ch;font-size:clamp(3.15rem,13vw,4.8rem);line-height:.92}.hero-copy .lede{max-width:31ch;margin-top:14px;font-size:.92rem;line-height:1.45}.hero-actions{gap:9px;margin-top:18px}.btn{min-height:48px;padding:0 18px;gap:10px;font-size:.82rem}.btn-primary{min-width:0}.btn-secondary{min-width:0}.benefits{left:16px;right:16px;bottom:18px;width:auto;min-height:unset;padding:8px 6px;border-radius:13px}.benefit{display:block;text-align:center;padding:8px 6px}.benefit svg{width:25px;height:25px;margin:0 auto 5px}.benefit strong{font-size:.68rem}.benefit span{font-size:.62rem;line-height:1.2}.jambalo-track{height:340vh;height:340svh}.jambalo-stage{min-height:560px}.jambalo-video{object-position:58% center}.jambalo-shade{background:linear-gradient(0deg,rgba(7,8,9,.72),rgba(7,8,9,.28) 58%,rgba(7,8,9,.12)),linear-gradient(90deg,rgba(8,9,10,.48),transparent 100%)}.jambalo-copy{left:24px;right:24px;top:auto;bottom:14%;width:auto;transform:none}.jambalo-kicker{font-size:.6rem;margin-bottom:13px}.jambalo-copy h2{max-width:9ch;font-size:clamp(3.4rem,15vw,5rem)}.jambalo-copy h2 span{max-width:12ch;font-size:.47em}.jambalo-copy p:last-child{max-width:34ch;margin-top:17px;font-size:.92rem;line-height:1.55}.jambalo-scroll-note{bottom:3%;font-size:.55rem}.brands-showcase{min-height:720px;min-height:90svh;padding:78px 18px}.brands-heading .section-title{font-size:clamp(2.55rem,11vw,3.9rem)}.brands-intro{max-width:34ch;margin-top:14px;font-size:.92rem}.brand-grid{gap:8px 10px;margin-top:34px}.brand-item{flex:1 1 calc(50% - 12px);width:calc(50% - 12px);min-width:0;max-width:190px;height:86px;padding:8px}.brand-item.compact-logo img{transform:scale(1.16)}.page-section{padding:76px 22px}.products-head,.location-head{display:block;margin-bottom:28px}.products .section-lede,.location .section-lede{margin-top:18px}.product-grid{grid-template-columns:1fr;gap:14px}.product-card{min-height:310px}.product-meta{left:20px;right:20px;bottom:20px}.story{grid-template-columns:1fr;gap:26px}.story-image{min-height:300px;height:360px;grid-row:1}.location-video-wrap{aspect-ratio:4/3}.location-caption{align-items:flex-start;flex-direction:column;gap:8px}.footer{padding:26px 22px;flex-wrap:wrap}.section-title{font-size:clamp(2.7rem,12vw,4rem)}}
+    @media (max-width:720px){.audience-track{height:470vh;height:470svh}.audience-kicker{top:7%;font-size:.59rem;letter-spacing:.2em}.audience-copy{top:12%}.audience-copy h2{font-size:clamp(2.6rem,11vw,4rem)}.audience-copy p{max-width:30ch;margin:10px auto 0;font-size:.9rem;line-height:1.45}.audience-photo{width:68vw;height:20vh;max-height:190px;border-radius:8px}.audience-photo.left{left:2vw;top:35%}.audience-photo.right{right:2vw;top:59%}.audience-scroll-note{bottom:2%;font-size:.55rem}}
+    @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.001ms!important;transition-duration:.001ms!important;scroll-behavior:auto!important}.hero-track{height:100vh;height:100svh}.hero-stage{position:relative}.hero-video,.jambalo-video,.brands-video{display:none}.hero-copy .eyebrow,.hero-copy h1,.hero-copy .lede,.hero-actions,.benefits,.site-nav{opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto}.jambalo-track{height:auto}.jambalo-stage{position:relative;top:auto;height:auto;min-height:85vh;padding:110px 24px 80px}.jambalo-copy{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:min(600px,100%);transform:none}.jambalo-copy p:last-child{opacity:1!important;transform:none!important}.jambalo-scroll-note{display:none}.reveal-on-view{opacity:1;transform:none}.audience-track{height:auto}.audience-stage{position:relative;top:auto;height:auto;min-height:0;padding:110px 5vw 80px;overflow:hidden}.audience-kicker{top:42px}.audience-groups{position:relative;inset:auto;display:grid;gap:64px}.audience-group{position:relative;inset:auto;visibility:visible!important;opacity:1!important;display:grid;grid-template-columns:1fr 1fr;gap:16px;pointer-events:auto}.audience-copy{position:relative;grid-column:1/-1;inset:auto;opacity:1!important;transform:none!important;margin-bottom:4px}.audience-photo,.audience-photo.left,.audience-photo.right{position:relative;left:auto;right:auto;top:auto;width:100%;height:auto;max-height:none;aspect-ratio:4/3;opacity:1!important;visibility:visible!important;transform:none!important}.audience-scroll-note{display:none}}
+    @media (max-width:640px){.brands-track{height:570vh;height:570svh}.brands-heading{top:clamp(64px,10vh,96px);left:18px;right:18px}.brands-heading .section-title{font-size:clamp(2.35rem,10.5vw,3.65rem)}.brands-intro{max-width:32ch;margin-top:12px;font-size:.9rem}.brand-group{top:58%;width:94vw;gap:3vw}.brand-logo{width:44vw;height:150px}.brand-logo.wide{width:46vw}.brand-logo.compact{width:38vw}.brand-group.single{top:57%}.brand-group.single .brand-logo{width:66vw;height:28vh}.brands-controls{bottom:3vh}}
+    @media (prefers-reduced-motion:reduce){.brands-track{height:auto}.brands-stage{position:relative;top:auto;height:auto;min-height:0;overflow:hidden;padding:0 20px 74px}.brands-panel{position:relative;inset:auto;min-height:100vh;overflow:visible;transform:none!important}.brands-video{display:none}.brands-wash{background:#faf9f6}.brands-heading{position:relative;top:auto;left:auto;right:auto;padding:92px 0 38px}.brand-groups{position:relative;inset:auto;display:grid;gap:30px}.brand-group,.brand-group.single{position:relative;top:auto;left:auto;width:min(760px,100%);height:150px;margin:0 auto;transform:none;visibility:visible!important;opacity:1!important;display:flex;gap:18px}.brand-logo,.brand-group.single .brand-logo{width:44%;height:auto;max-height:145px;opacity:1!important;visibility:visible!important;transform:none!important}.brands-controls{position:relative;left:auto;right:auto;bottom:auto;margin-top:24px}}
+    @media (max-width:640px){.location-track{height:320vh;height:320svh}.location-stage{min-height:600px}.location-video{object-position:58% center}.location-shade{background:linear-gradient(0deg,rgba(7,8,8,.82),rgba(7,8,8,.44) 56%,rgba(7,8,8,.18)),linear-gradient(90deg,rgba(7,8,8,.2),transparent 100%)}.location-copy{left:24px;right:24px;top:auto;bottom:14%;width:auto;transform:none}.location-copy .section-kicker{font-size:.6rem;margin-bottom:13px}.location-copy .section-title{max-width:9ch;font-size:clamp(3.25rem,14vw,4.9rem)}.location-copy .location-lede{max-width:34ch;margin-top:16px;font-size:.92rem;line-height:1.55}.location-cta{min-height:54px;margin-top:22px;padding:0 24px;font-size:.92rem}.location-scroll-note{bottom:3%;font-size:.55rem}}
+    @media (prefers-reduced-motion:reduce){.location-track{height:auto}.location-stage{position:relative;top:auto;height:auto;min-height:100vh;padding:110px 24px 80px}.location-video{display:none}.location-copy{position:relative;left:auto;right:auto;top:auto;bottom:auto;width:min(620px,100%);transform:none}.location-copy [data-location-reveal],.location-copy .location-lede,.location-copy .location-cta{opacity:1!important;visibility:visible!important;transform:none!important;pointer-events:auto}.location-scroll-note{display:none}}
+
+    /* ===== Fundadores ===== */
+    .founders-track{position:relative;height:300vh;height:300svh;background:#121211;color:#fff;isolation:isolate}
+    .founders-stage{position:sticky;top:0;height:100vh;height:100svh;min-height:600px;overflow:hidden;background:#121211}
+    .founders-photo{position:absolute;left:0;top:0;bottom:0;width:66%;background:url('assets/fundadores.jpg') 38% center/cover no-repeat;-webkit-mask-image:linear-gradient(90deg,#000 70%,transparent);mask-image:linear-gradient(90deg,#000 70%,transparent);transform:scale(1.08);transform-origin:35% 50%;will-change:transform}
+    .founders-shade{position:absolute;inset:0;pointer-events:none;background:linear-gradient(0deg,rgba(7,8,8,.7),transparent 38%),linear-gradient(180deg,rgba(7,8,8,.3),transparent 22%)}
+    .founders-logo{position:absolute;left:clamp(24px,5vw,84px);bottom:clamp(22px,4.5vh,48px);width:clamp(96px,11vw,170px);height:auto}
+    .founders-copy{position:absolute;right:clamp(24px,6vw,96px);top:50%;transform:translateY(-50%);width:min(500px,37vw);min-width:340px;text-shadow:0 2px 22px rgba(0,0,0,.42)}
+    html.js .founders-track [data-f]{opacity:0;visibility:hidden;will-change:opacity,transform}
+    .founders-copy .section-kicker{color:rgba(255,255,255,.8);margin-bottom:12px}
+    .founders-copy .section-title{max-width:none;font-size:clamp(2.6rem,5.2vw,5.4rem);line-height:.95;letter-spacing:-.04em}
+    .founders-copy p{margin:0}
+    .founders-lede{margin-top:16px!important;max-width:44ch;color:rgba(255,255,255,.9);font-size:clamp(.88rem,1.1vw,1rem);line-height:1.55}
+    .founders-names{list-style:none;margin:18px 0 0;padding:0;border-top:1px solid var(--line)}
+    .founders-names li{display:flex;align-items:baseline;gap:16px;padding:9px 0;border-bottom:1px solid var(--line);font-family:Georgia,'Times New Roman',serif;font-size:clamp(1.3rem,2vw,1.8rem);letter-spacing:-.02em}
+    .founders-names li span{color:var(--gold);font:600 .7rem Arial,Helvetica,sans-serif;letter-spacing:.22em}
+    .founders-tagline{margin-top:16px!important;color:var(--gold);font-family:Georgia,'Times New Roman',serif;font-style:italic;font-size:clamp(1.02rem,1.4vw,1.3rem);line-height:1.35}
+    .founders-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:22px}
+    .founders-btn{min-height:52px;min-width:0;padding:0 24px;gap:14px;background:rgba(9,9,9,.18);backdrop-filter:blur(6px);cursor:pointer}
+    .founders-btn:hover{background:#fff;color:#171717;border-color:#fff;box-shadow:0 10px 28px rgba(0,0,0,.28)}
+    .founders-btn .arrow{transition:transform .25s var(--ease)}
+    .founders-btn:hover .arrow{transform:translateX(5px)}
+    /* ===== Footer ===== */
+    .site-footer{background:#2a2a28;border-top:1px solid rgba(255,255,255,.1);color:var(--muted);font-size:.9rem}
+    .footer-in{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 32px;padding:18px clamp(24px,7vw,112px)}
+    .footer-links{display:flex;flex-wrap:wrap;align-items:center;gap:10px clamp(18px,3vw,40px);margin:0;padding:0;list-style:none}
+    .site-footer a,.site-footer .f-item{display:inline-flex;align-items:center;gap:8px;color:inherit;text-decoration:none;transition:color .25s var(--ease)}
+    .site-footer .f-item{cursor:default}
+    .site-footer a:hover,.site-footer .f-item:hover{color:var(--gold)}
+    .site-footer svg{width:16px;height:16px;fill:currentColor}
+    @media (max-width:820px),(prefers-reduced-motion:reduce){
+      .founders-track{height:auto}.founders-stage{position:relative;height:auto;min-height:0;display:flex;flex-direction:column;overflow:visible}
+      .founders-photo{position:relative;width:100%;height:62vw;max-height:440px;transform:none!important;-webkit-mask-image:linear-gradient(180deg,#000 72%,transparent);mask-image:linear-gradient(180deg,#000 72%,transparent)}
+      .founders-shade{display:none}
+      .founders-copy{position:relative;right:auto;top:auto;transform:none;width:auto;min-width:0;padding:8px 24px 28px}
+      .founders-logo{position:relative;left:auto;bottom:auto;display:block;margin:0 24px 36px;width:104px}
+      html.js .founders-track [data-f]{opacity:1!important;visibility:visible!important;transform:none!important}
+    }
+
+    /* ===== Políticas y privacidad ===== */
+    .f-btn{background:none;border:0;padding:0;font:inherit;color:inherit;cursor:pointer}
+    .policies{position:fixed;inset:0;z-index:60;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;overscroll-behavior:contain;padding:clamp(16px,5vh,56px) clamp(12px,5vw,48px);background:rgba(32,32,30,.72);-webkit-backdrop-filter:blur(18px);backdrop-filter:blur(18px)}
+    .policies.open{display:flex;animation:polIn .35s var(--ease)}
+    @keyframes polIn{from{opacity:0}to{opacity:1}}
+    .policies-panel{position:relative;width:min(980px,100%);margin:auto 0;padding:clamp(26px,5vw,64px);border:1px solid rgba(255,255,255,.14);border-radius:24px;background:rgba(42,42,40,.84);box-shadow:0 30px 80px rgba(0,0,0,.4)}
+    .policies-close{position:absolute;top:16px;right:16px;width:44px;height:44px;border:1px solid rgba(255,255,255,.4);border-radius:50%;background:rgba(0,0,0,.15);color:#fff;font-size:1.4rem;line-height:1;cursor:pointer;transition:background .25s var(--ease),color .25s var(--ease)}
+    .policies-close:hover{background:#fff;color:#171717}
+    .policies-panel .section-kicker{color:var(--gold)}
+    .policies-panel .section-title{max-width:12ch;font-size:clamp(2.8rem,6.4vw,5.8rem)}
+    .policies-sub{margin:18px 0 34px;max-width:52ch;color:var(--muted);font-size:clamp(.95rem,1.4vw,1.1rem);line-height:1.55}
+    .pol{display:grid;grid-template-columns:56px 1fr;gap:0 18px;padding:28px 0;border-top:1px solid var(--line)}
+    .pol-n{color:var(--gold);font:400 1.7rem Georgia,'Times New Roman',serif}
+    .pol h3{margin:0 0 14px;font:400 clamp(1.3rem,2.2vw,1.8rem)/1.15 Georgia,'Times New Roman',serif;letter-spacing:-.02em}
+    .pol p{margin:0 0 12px;color:var(--muted);font-size:.98rem;line-height:1.65}
+    .pol ul{margin:0 0 12px;padding-left:1.15em;color:var(--muted);font-size:.98rem;line-height:1.6}
+    .pol li{margin:0 0 9px}.pol li::marker{color:var(--gold)}
+    .pol-note{padding:11px 16px;border-left:2px solid var(--gold);border-radius:0 10px 10px 0;background:rgba(211,168,103,.09);color:var(--cream)!important}
+    @media (max-width:640px){.pol{grid-template-columns:1fr}.pol-n{margin-bottom:4px}}
+  </style>
+</head>
+<body>
+  <a class="skip" href="#contenido">Saltar al contenido</a>
+  <main id="contenido">
+    <section class="hero-track" id="inicio" aria-label="Inicio de Calzado CDR">
+      <div class="hero-stage" id="hero-stage">
+        <div class="hero-poster" aria-hidden="true"></div>
+        <video class="hero-video" id="hero-video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <div class="hero-shade" aria-hidden="true"></div>
+
+        <header class="site-nav" id="site-nav">
+          <img class="brand-mark" src="assets/cdr-mark.png" alt="CDR">
+          <nav aria-label="Navegación principal">
+            <ul class="nav-links"><li><span class="active">Inicio</span></li><li><span>Catálogo</span></li><li><span>Nosotros</span></li><li><span>Contacto</span></li></ul>
+          </nav>
+          <button class="contact-outline" type="button" aria-label="Contáctanos, enlace pendiente">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 11.8a8.5 8.5 0 0 1-12.6 7.4L3 20l1.1-4.5a8.5 8.5 0 1 1 16.4-3.7Z" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M8.6 8.6c.4 2.6 2.1 4.4 4.8 5.3l1.2-1.2 2 1c-.2 1.1-1.1 1.8-2.2 1.8-3.7-.2-7.4-3.8-7.5-7.2 0-1 .8-1.9 1.8-2l1 2.1-1.1 1.2Z" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round"/></svg>
+            Contáctanos
+          </button>
+        </header>
+
+        <div class="hero-copy">
+          <p class="eyebrow" data-reveal="eyebrow">Calidad que te acompaña</p>
+          <h1 data-reveal="title">El calzado que<br>te lleva lejos</h1>
+          <p class="lede" data-reveal="lede">Encuentra calzado para toda la familia, con diseños para cada ocasión y precios justos.</p>
+          <div class="hero-actions" data-reveal="actions">
+            <button class="btn btn-primary" type="button" aria-label="Ver catálogo, enlace pendiente">Ver catálogo <span class="arrow" aria-hidden="true">›</span></button>
+            <button class="btn btn-secondary" type="button" aria-label="Conoce más, enlace pendiente">Conoce más <span class="arrow" aria-hidden="true">›</span></button>
+          </div>
+        </div>
+
+        <div class="benefits" data-reveal="benefits" aria-label="Beneficios de CDR">
+          <div class="benefit"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M3 11h21v18H3zM24 17h7l6 6v6H24zM10 34a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7ZM31 34a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7Z"/><path d="M3 17h13M3 22h9"/></svg><div><strong>Entregas seguras</strong><span>A toda Colombia</span></div></div>
+          <div class="benefit"><svg viewBox="0 0 40 40" aria-hidden="true"><path d="M20 3 34 9v10c0 9-5.6 14.7-14 18-8.4-3.3-14-9-14-18V9l14-6Z"/><path d="m13 20 5 5 10-11"/></svg><div><strong>Calzado para</strong><span>toda la familia</span></div></div>
+          <div class="benefit"><svg viewBox="0 0 40 40" aria-hidden="true"><rect x="3" y="7" width="34" height="26" rx="3"/><path d="M3 15h34M9 26h8"/></svg><div><strong>Compra fácil</strong><span>Múltiples métodos</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="audience-track" id="familia" aria-label="Calzado para niños, jóvenes y adultos">
+      <div class="audience-stage" id="audience-stage">
+        <div class="audience-backdrop" aria-hidden="true"></div>
+        <div class="audience-kicker">Calzado para toda la familia</div>
+        <div class="audience-groups">
+          <article class="audience-group" data-audience="0">
+            <div class="audience-copy"><h2>Niños</h2><p>Pequeños pasos, grandes historias.</p></div>
+            <img class="audience-photo left" data-photo="0" src="assets/familias/ninos-01.png" alt="Niño explorando zapatillas en CDR">
+            <img class="audience-photo right" data-photo="1" src="assets/familias/ninos-02.png" alt="Niña sonriente mostrando zapatillas rosadas">
+          </article>
+          <article class="audience-group" data-audience="1">
+            <div class="audience-copy"><h2>Jóvenes</h2><p>Estilo propio para cada nuevo camino.</p></div>
+            <img class="audience-photo right" data-photo="2" src="assets/familias/jovenes-01.png" alt="Jóvenes explorando el calzado de la tienda">
+            <img class="audience-photo left" data-photo="3" src="assets/familias/jovenes-02.png" alt="Pareja joven en la tienda CDR">
+          </article>
+          <article class="audience-group" data-audience="2">
+            <div class="audience-copy"><h2>Adultos</h2><p>Un buen par acompaña cada etapa.</p></div>
+            <img class="audience-photo left" data-photo="4" src="assets/familias/adultos-01.png" alt="Padre e hija compartiendo un momento en la tienda">
+            <img class="audience-photo right" data-photo="5" src="assets/familias/adultos-02.png" alt="Cliente feliz saliendo de CDR con sus zapatillas">
+          </article>
+        </div>
+        <div class="audience-scroll-note" aria-hidden="true">Desliza para explorar</div>
+      </div>
+    </section>
+
+    <section class="jambalo-track" id="origen" aria-label="Jambaló, donde nació esta historia">
+      <div class="jambalo-stage" id="jambalo-stage">
+        <div class="jambalo-poster" aria-hidden="true"></div>
+        <video class="jambalo-video" id="jambalo-video" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <div class="jambalo-shade" aria-hidden="true"></div>
+        <div class="jambalo-copy">
+          <p class="jambalo-kicker">CDR · Cauca</p>
+          <h2>Jambaló,<span>donde nació esta historia</span></h2>
+          <p>En 2020, en medio de una etapa difícil, nació CDR como un negocio familiar. Con la confianza y el cariño de nuestros clientes, crecimos más allá de una tienda de zapatillas. Hoy nos alegra compartir este camino con una familia cada vez más grande.</p>
+        </div>
+        <div class="jambalo-scroll-note" aria-hidden="true">Desliza para conocer nuestro origen</div>
+      </div>
+    </section>
+
+    <section class="brands-track" id="marcas" aria-label="Marcas que encuentras en CDR">
+      <div class="brands-stage" id="brands-stage">
+        <div class="brands-panel" id="brands-panel">
+        <video class="brands-video" id="brands-video" autoplay muted loop playsinline preload="auto" aria-hidden="true" tabindex="-1">
+          <source src="assets/marcas/neones.mp4" type="video/mp4">
+        </video>
+        <div class="brands-wash" aria-hidden="true"></div>
+        <header class="brands-heading" id="brands-heading">
+          <p class="section-kicker">Estilo para cada camino</p>
+          <h2 class="section-title" id="brands-title">Marcas que encuentras en CDR</h2>
+          <p class="brands-intro">Cada marca tiene su estilo. En CDR reunimos opciones para que encuentres el par ideal para ti y tu familia.</p>
+        </header>
+        <div class="brand-groups" id="brand-groups" aria-label="Marcas disponibles en CDR">
+          <div class="brand-group" data-brand-group="0" role="group" aria-label="Nike y Adidas">
+            <img class="brand-logo left wide" src="assets/marcas/transparent/nike.png" alt="Nike">
+            <img class="brand-logo right wide" src="assets/marcas/transparent/adidas.png" alt="Adidas">
+          </div>
+          <div class="brand-group" data-brand-group="1" role="group" aria-label="New Balance y Puma">
+            <img class="brand-logo left wide" src="assets/marcas/transparent/new-balance.png" alt="New Balance">
+            <img class="brand-logo right compact" src="assets/marcas/transparent/puma.png" alt="Puma">
+          </div>
+          <div class="brand-group" data-brand-group="2" role="group" aria-label="Reebok y Skechers">
+            <img class="brand-logo left wide" src="assets/marcas/transparent/reebok.png" alt="Reebok">
+            <img class="brand-logo right wide" src="assets/marcas/transparent/skechers.png" alt="Skechers">
+          </div>
+          <div class="brand-group" data-brand-group="3" role="group" aria-label="Fila y Under Armour">
+            <img class="brand-logo left wide" src="assets/marcas/transparent/fila.png" alt="Fila">
+            <img class="brand-logo right wide" src="assets/marcas/transparent/under-armour.png" alt="Under Armour">
+          </div>
+          <div class="brand-group" data-brand-group="4" role="group" aria-label="Le Coq Sportif y Louis Vuitton">
+            <img class="brand-logo left compact" src="assets/marcas/transparent/le-coq-sportif.png" alt="Le Coq Sportif">
+            <img class="brand-logo right wide" src="assets/marcas/transparent/louis-vuitton.png" alt="Louis Vuitton">
+          </div>
+          <div class="brand-group single" data-brand-group="5" role="group" aria-label="Crocs">
+            <img class="brand-logo single" src="assets/marcas/transparent/crocs.png" alt="Crocs">
+          </div>
+        </div>
+        <div class="brands-controls" aria-hidden="true">
+          <span class="brands-step" id="brands-step">01 / 06</span>
+          <span>Desliza para descubrir</span>
+          <div class="brands-progress"><span id="brands-progress"></span></div>
+        </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="location-track" id="ubicacion" aria-label="Visítanos en Jambaló, Cauca">
+      <div class="location-stage" id="location-stage">
+        <div class="location-poster" aria-hidden="true"></div>
+        <video class="location-video" id="location-video-scroll" muted playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+        <div class="location-shade" aria-hidden="true"></div>
+        <div class="location-copy">
+          <p class="section-kicker" data-location-reveal="eyebrow">CDR · Jambaló, Cauca</p>
+          <h2 class="section-title" data-location-reveal="title">Nos vemos en Jambaló</h2>
+          <p class="location-lede" data-location-reveal="lede">Ven a conocer nuestra tienda, descubrir tus estilos favoritos y encontrar con nosotros el par ideal para ti y tu familia. Nos encantará recibirte.</p>
+          <a class="location-cta" data-location-reveal="action" href="https://maps.app.goo.gl/SJCzxGPyWMUVUkuT8" target="_blank" rel="noopener noreferrer">Ver ubicación <span class="arrow" aria-hidden="true">↗</span></a>
+        </div>
+        <div class="location-scroll-note" aria-hidden="true">Desliza para visitar CDR</div>
+      </div>
+    </section>
+
+    <section class="founders-track" id="fundadores" aria-label="Fundadores de CDR">
+      <div class="founders-stage">
+        <div class="founders-photo" role="img" aria-label="Camilo, Dora y Robinson, fundadores de CDR"></div>
+        <div class="founders-shade" aria-hidden="true"></div>
+        <div class="founders-copy">
+          <p class="section-kicker" data-f="eyebrow">Conoce a los fundadores de CDR</p>
+          <h2 class="section-title" data-f="title">FUNDADORES</h2>
+          <p class="founders-lede" data-f="lede">Tres personas, una misma pasión: el calzado. Conoce a la familia detrás de CDR y descubre la historia de una marca que busca acompañarte en cada paso.</p>
+          <ul class="founders-names" aria-label="Nombres de los fundadores">
+            <li data-f="n1" data-x="70" data-y="-40" data-r="2"><span>01</span>Camilo</li>
+            <li data-f="n2" data-x="-60" data-y="34" data-r="-2"><span>02</span>Dora</li>
+            <li data-f="n3" data-x="90" data-y="52" data-r="1.5"><span>03</span>Robinson</li>
+          </ul>
+          <p class="founders-lede" data-f="lede2">Queremos conocerte y que nos conozcas. Somos la familia detrás de CDR y nos alegra compartir contigo nuestra pasión por el calzado.</p>
+          <p class="founders-tagline" data-f="tag">CDR, más que zapatos, una familia que camina contigo.</p>
+          <div class="founders-actions" data-f="actions">
+            <button class="btn btn-secondary founders-btn" type="button">Ver catálogo <span class="arrow" aria-hidden="true">›</span></button>
+            <button class="btn btn-secondary founders-btn" type="button">Registrarme <span class="arrow" aria-hidden="true">›</span></button>
+          </div>
+        </div>
+        <img class="founders-logo" data-f="logo" data-x="-30" data-y="30" src="assets/cdr-logo-blanco.png" alt="CDR">
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="footer-in">
+      <span class="f-item">Colombia</span>
+      <ul class="footer-links">
+        <li><button type="button" class="f-item f-btn" id="policies-open" aria-haspopup="dialog">Políticas</button></li>
+        <li><span class="f-item">Ayuda y contacto</span></li>
+        <li><a href="https://www.facebook.com/profile.php?id=61572053567705" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 21v-7.5h2.6l.4-3h-3V8.6c0-.9.3-1.5 1.6-1.5h1.5V4.4c-.3 0-1.2-.1-2.2-.1-2.3 0-3.9 1.4-3.9 4v2.2H7.9v3h2.6V21h3Z"/></svg>Facebook</a></li>
+      </ul>
+    </div>
+  </footer>
+
+  <div class="policies" id="policies" role="dialog" aria-modal="true" aria-labelledby="policies-title" aria-hidden="true">
+    <div class="policies-panel">
+      <button type="button" class="policies-close" id="policies-close" aria-label="Cerrar políticas">&times;</button>
+      <p class="section-kicker">CDR · Jambaló, Cauca</p>
+      <h2 class="section-title" id="policies-title">Políticas y privacidad</h2>
+      <p class="policies-sub">Separaciones, pagos, cambios, garantías y tratamiento de datos personales</p>
+
+      <article class="pol"><span class="pol-n">01</span><div>
+        <h3>Información general y contacto</h3>
+        <p>CDR es una tienda física ubicada en Cra. 2ª, Jambaló, Cauca. La atención y entrega de productos se realiza en la tienda. CDR no realiza envíos.</p>
+        <p>Medios de pago disponibles: efectivo, Nequi, Bancolombia y Sistecrédito.</p>
+        <p>Canales de contacto:</p>
+        <ul><li>Número oficial de CDR: +57 317 885 7593</li><li>Número adicional: 320 646 9241</li></ul>
+      </div></article>
+
+      <article class="pol"><span class="pol-n">02</span><div>
+        <h3>Separación de zapatillas y abonos</h3>
+        <ul>
+          <li>Para separar un par de zapatillas, el cliente debe abonar la tercera parte (1/3) del precio total.</li>
+          <li>El plazo inicial para completar el pago es de un (1) mes contado desde la fecha de separación. Durante ese tiempo, el cliente puede realizar abonos.</li>
+          <li>Si al finalizar el primer mes el pago no se ha completado, CDR podrá retirar el par de la separación y volver a exhibirlo en vitrina.</li>
+          <li>Si el par sigue disponible cuando el cliente regrese, podrá separarlo nuevamente por un segundo mes. Para esta segunda oportunidad, deberá comprometerse a completar el pago total dentro de ese plazo, realizando abonos si lo necesita.</li>
+          <li>Si el par se retiró de la separación y se vendió, el cliente podrá elegir entre recibir la devolución completa del dinero abonado o solicitar otro par, sujeto a disponibilidad.</li>
+          <li>Si el cliente elige otro par, los abonos acumulados se aplicarán al precio del nuevo producto. Si cuesta más, deberá pagar la diferencia. Si cuesta menos y el dinero abonado cubre el precio completo, podrá llevárselo. Si no lo cubre, deberá pagar el saldo pendiente.</li>
+          <li>El nuevo par no se entregará hasta que el precio total haya sido pagado.</li>
+        </ul>
+        <p class="pol-note">CDR no retiene el 20 % de los abonos. Cuando corresponda una devolución según estas condiciones, se devolverá la totalidad del dinero abonado.</p>
+        <p>Estas condiciones comerciales no limitan los derechos que reconoce la legislación colombiana de protección al consumidor.</p>
+      </div></article>
+
+      <article class="pol"><span class="pol-n">03</span><div>
+        <h3>Cambios de talla cuando la compra es para un familiar</h3>
+        <ul>
+          <li>Si el calzado se compra para un familiar y, al probárselo después, no le queda la talla, se podrá solicitar un cambio dentro de los ocho (8) días calendario siguientes a la compra o entrega.</li>
+          <li>El par debe devolverse sin uso, en buen estado y sin daños. Si presenta daños, señales de uso o no está en buenas condiciones, CDR no aceptará el cambio voluntario por talla.</li>
+          <li>El cambio se realizará por otro par, sujeto a disponibilidad. Por motivos de talla, esta política contempla cambio de producto y no devolución de dinero.</li>
+          <li>El comprobante de compra puede ayudar a verificar la transacción, pero no se exige en todos los casos.</li>
+        </ul>
+        <p>Esta política de cambios voluntarios por talla no elimina ni limita los derechos legales que puedan aplicar si el producto presenta defectos o fallas cubiertas por la garantía.</p>
+      </div></article>
+
+      <article class="pol"><span class="pol-n">04</span><div>
+        <h3>Compras para uso de la persona que se prueba el calzado</h3>
+        <p>Cuando la persona que usará el calzado se lo prueba en la tienda, confirma que la talla le queda y realiza la compra, CDR no ofrece cambios ni devoluciones posteriores por talla, gusto o preferencia. Esto no afecta los derechos legales relacionados con la garantía ni otros derechos irrenunciables del consumidor.</p>
+      </div></article>
+
+      <article class="pol"><span class="pol-n">05</span><div>
+        <h3>Garantía y errores en la entrega</h3>
+        <p>CDR atenderá las solicitudes relacionadas con defectos o fallas conforme a la garantía legal aplicable. Cada caso se revisará de acuerdo con las condiciones del producto y la normativa vigente.</p>
+        <p>Si CDR entrega un par diferente al acordado o comete un error en el producto entregado, el cliente debe comunicarse con la tienda para que se revise el caso y se dé una solución. La política de cambios por talla no se utilizará para evitar corregir un error de entrega ni para limitar derechos legales.</p>
+      </div></article>
+
+      <article class="pol"><span class="pol-n">06</span><div>
+        <h3>Tratamiento de datos personales</h3>
+        <p>CDR puede solicitar nombre, teléfono y lugar de residencia cuando una persona separa un producto y aún no ha terminado de pagarlo. Estos datos se utilizan para identificar la separación, llevar el control de los abonos y coordinar la atención.</p>
+        <p>En compras gestionadas mediante Sistecrédito, el personal de CDR puede revisar visualmente el documento de identidad y comparar la fotografía del documento con la persona que realiza la compra, con el propósito de verificar su identidad y prevenir posibles robos o suplantaciones. CDR no toma ni conserva fotografías o copias de la cédula ni registra los datos del documento.</p>
+        <p>Los registros relacionados con clientes y separaciones se conservan aproximadamente seis (6) meses. Los datos se utilizan para las finalidades informadas y deben manejarse de forma responsable y protegida.</p>
+        <p>Los clientes pueden solicitar información sobre sus datos personales, pedir su corrección o actualización y ejercer los demás derechos reconocidos por la normativa aplicable.</p>
+        <p>Para consultas, solicitudes o reclamos relacionados con datos personales, el cliente puede comunicarse con CDR a través de los números indicados en la sección 1.</p>
+      </div></article>
+    </div>
+  </div>
+
+  <script>
+  (() => {
+    const stage = document.getElementById('hero-stage');
+    const track = document.querySelector('.hero-track');
+    const video = document.getElementById('hero-video');
+    const nav = document.getElementById('site-nav');
+    const audienceTrack = document.getElementById('familia');
+    const audienceGroups = [...document.querySelectorAll('.audience-group')];
+    const jambaloTrack = document.getElementById('origen');
+    const jambaloStage = document.getElementById('jambalo-stage');
+    const jambaloVideo = document.getElementById('jambalo-video');
+    const jambaloText = jambaloTrack.querySelector('.jambalo-copy p:last-child');
+    const brandsTrack = document.getElementById('marcas');
+    const brandsVideo = document.getElementById('brands-video');
+    const brandsPanel = document.getElementById('brands-panel');
+    const brandGroups = [...document.querySelectorAll('.brand-group')];
+    const brandsStep = document.getElementById('brands-step');
+    const brandsProgressBar = document.getElementById('brands-progress');
+    const locationTrack = document.getElementById('ubicacion');
+    const locationStage = document.getElementById('location-stage');
+    const locationVideo = document.getElementById('location-video-scroll');
+    const locationRevealEls = [...document.querySelectorAll('[data-location-reveal]')];
+    const reduced = matchMedia('(prefers-reduced-motion: reduce)');
+    const bands = {
+      eyebrow: [0.055, 0.17],
+      title: [0.14, 0.31],
+      lede: [0.29, 0.45],
+      actions: [0.44, 0.62],
+      benefits: [0.67, 0.82]
+    };
+    let target = 0, shown = 0, audienceTarget = 0, audienceShown = 0, jambaloTarget = 0, jambaloShown = 0, brandsTarget = 0, brandsShown = 0, brandsEntryTarget = 0, brandsEntryShown = 0, locationTarget = 0, locationShown = 0;
+    let raf = null, lastTick = 0, busy = false, pending = null;
+    let loaded = false, jambaloLoaded = false, jambaloBusy = false, jambaloPending = null, locationLoaded = false, locationBusy = false, locationPending = null;
+    let heroVisible = true, audienceVisible = false, jambaloVisible = false, brandsVisible = false, locationVisible = false;
+    let lastProgress = -1, lastAudienceProgress = -1, lastJambaloProgress = -1, lastBrandsProgress = -1, lastBrandsEntry = -1, lastLocationProgress = -1;
+    const clamp = (x, a=0, b=1) => Math.min(b, Math.max(a, x));
+    const smooth = x => { x=clamp(x); return x*x*(3-2*x); };
+    const heroProgress = () => {
+      const rect = track.getBoundingClientRect();
+      const range = Math.max(1, track.offsetHeight - innerHeight);
+      return clamp(-rect.top / range);
+    };
+    const audienceProgress = () => {
+      const rect = audienceTrack.getBoundingClientRect();
+      const range = Math.max(1, audienceTrack.offsetHeight - innerHeight);
+      return clamp(-rect.top / range);
+    };
+    const jambaloProgress = () => {
+      const rect = jambaloTrack.getBoundingClientRect();
+      const range = Math.max(1, jambaloTrack.offsetHeight - innerHeight);
+      return clamp(-rect.top / range);
+    };
+    const brandsScrollProgress = () => {
+      const rect = brandsTrack.getBoundingClientRect();
+      const range = Math.max(1, brandsTrack.offsetHeight - innerHeight);
+      return clamp(-rect.top / range);
+    };
+    const brandsEntryProgress = () => {
+      const rect = brandsTrack.getBoundingClientRect();
+      return clamp((innerHeight - rect.top) / Math.max(1, innerHeight));
+    };
+    const locationProgress = () => {
+      const rect = locationTrack.getBoundingClientRect();
+      const range = Math.max(1, locationTrack.offsetHeight - innerHeight);
+      return clamp(-rect.top / range);
+    };
+    function loadVideo(){
+      if(loaded || reduced.matches) return;
+      loaded = true;
+      stage.classList.add('loading');
+      const url = 'assets/hero-scroll.mp4';
+      if(location.protocol === 'file:'){
+        video.src = url;
+        video.load();
+        return;
+      }
+      fetch(url).then(response => {
+        if(!response.ok) throw new Error('No se pudo cargar el video');
+        return response.blob();
+      }).then(blob => {
+        video.src = URL.createObjectURL(blob);
+        video.load();
+      }).catch(() => stage.classList.remove('loading'));
+    }
+    function seek(time){
+      if(!video.duration || !Number.isFinite(video.duration)) return;
+      const t = clamp(time, 0, Math.max(0, video.duration - 0.035));
+      if(busy){pending=t;return;}
+      if(Math.abs(video.currentTime-t)<0.035) return;
+      busy=true;
+      try{video.currentTime=t;}catch(_){busy=false;}
+    }
+    function loadJambaloVideo(){
+      if(jambaloLoaded || reduced.matches) return;
+      jambaloLoaded=true;
+      const url='assets/jambalo-scroll.mp4';
+      if(location.protocol==='file:'){
+        jambaloVideo.src=url;
+        jambaloVideo.load();
+        return;
+      }
+      fetch(url).then(response=>{
+        if(!response.ok) throw new Error('No se pudo cargar el video de Jambaló');
+        return response.blob();
+      }).then(blob=>{
+        jambaloVideo.src=URL.createObjectURL(blob);
+        jambaloVideo.load();
+      }).catch(()=>jambaloStage.classList.remove('video-ready'));
+    }
+    function seekJambalo(time){
+      if(!jambaloVideo.duration || !Number.isFinite(jambaloVideo.duration)) return;
+      const t=clamp(time,0,Math.max(0,jambaloVideo.duration-.04));
+      if(jambaloBusy){jambaloPending=t;return;}
+      if(Math.abs(jambaloVideo.currentTime-t)<.04)return;
+      jambaloBusy=true;
+      try{jambaloVideo.currentTime=t;}catch(_){jambaloBusy=false;}
+    }
+    jambaloVideo.addEventListener('seeked',()=>{
+      jambaloBusy=false;
+      if(jambaloPending!==null){const t=jambaloPending;jambaloPending=null;seekJambalo(t);}
+    });
+    jambaloVideo.addEventListener('error',()=>{jambaloBusy=false;jambaloPending=null;jambaloStage.classList.remove('video-ready');});
+    jambaloVideo.addEventListener('loadedmetadata',()=>seekJambalo(jambaloShown*jambaloVideo.duration));
+    jambaloVideo.addEventListener('canplay',()=>{
+      jambaloStage.classList.add('video-ready');
+      seekJambalo(jambaloShown*jambaloVideo.duration);
+    },{once:true});
+    function loadLocationVideo(){
+      if(locationLoaded||reduced.matches)return;
+      locationLoaded=true;
+      const url='assets/location-scroll.mp4';
+      if(location.protocol==='file:'){
+        locationVideo.src=url;
+        locationVideo.load();
+        return;
+      }
+      fetch(url).then(response=>{
+        if(!response.ok)throw new Error('No se pudo cargar el video de la tienda');
+        return response.blob();
+      }).then(blob=>{
+        locationVideo.src=URL.createObjectURL(blob);
+        locationVideo.load();
+      }).catch(()=>locationStage.classList.remove('video-ready'));
+    }
+    function seekLocation(time){
+      if(!locationVideo.duration||!Number.isFinite(locationVideo.duration))return;
+      const t=clamp(time,0,Math.max(0,locationVideo.duration-.04));
+      if(locationBusy){locationPending=t;return;}
+      if(Math.abs(locationVideo.currentTime-t)<.04)return;
+      locationBusy=true;
+      try{locationVideo.currentTime=t;}catch(_){locationBusy=false;}
+    }
+    locationVideo.addEventListener('seeked',()=>{
+      locationBusy=false;
+      if(locationPending!==null){const t=locationPending;locationPending=null;seekLocation(t);}
+    });
+    locationVideo.addEventListener('error',()=>{locationBusy=false;locationPending=null;locationStage.classList.remove('video-ready');});
+    locationVideo.addEventListener('loadedmetadata',()=>seekLocation(locationShown*locationVideo.duration));
+    locationVideo.addEventListener('canplay',()=>{
+      locationStage.classList.add('video-ready');
+      seekLocation(locationShown*locationVideo.duration);
+    },{once:true});
+    video.addEventListener('seeked', () => {
+      busy=false;
+      if(pending!==null){const t=pending;pending=null;seek(t);}
+    });
+    video.addEventListener('error', () => {busy=false;pending=null;stage.classList.remove('loading','video-ready');});
+    video.addEventListener('loadedmetadata', () => seek(shown*video.duration));
+    video.addEventListener('canplay', () => {
+      stage.classList.remove('loading');
+      stage.classList.add('video-ready');
+      seek(shown*video.duration);
+    }, {once:true});
+    function setReveal(name, progress){
+      const el=document.querySelector(`[data-reveal="${name}"]`);
+      if(!el) return;
+      const [a,b]=bands[name];
+      const value=smooth((progress-a)/(b-a));
+      const rounded=Math.round(value*1000)/1000;
+      if(el.dataset.opacity!==String(rounded)){
+        el.style.opacity=rounded;
+        el.style.transform=`translateY(${(1-rounded)*18}px)`;
+        el.style.visibility=rounded>0.01?'visible':'hidden';
+        el.dataset.opacity=String(rounded);
+      }
+      if(name==='actions') el.classList.toggle('enabled',rounded>.9);
+    }
+    function update(progress){
+      if(Math.abs(progress-lastProgress)<0.002) return;
+      lastProgress=progress;
+      const navAlpha=smooth((progress-.025)/.13);
+      nav.classList.toggle('revealed',navAlpha>.01);
+      nav.classList.toggle('scrolled',track.getBoundingClientRect().bottom<nav.offsetHeight+6);
+      nav.style.opacity=navAlpha;
+      nav.style.transform=`translateY(${(1-navAlpha)*-12}px)`;
+      nav.style.pointerEvents=navAlpha>.82?'auto':'none';
+      Object.keys(bands).forEach(name=>setReveal(name,progress));
+      stage.style.setProperty('--scroll-progress',progress.toFixed(3));
+    }
+    function updateAudience(progress){
+      if(Math.abs(progress-lastAudienceProgress)<0.0015) return;
+      lastAudienceProgress=progress;
+      const segment=1/audienceGroups.length;
+      audienceGroups.forEach((group,index)=>{
+        const start=index*segment;
+        const local=clamp((progress-start)/segment);
+        const active=progress>=start && (progress<(start+segment) || index===audienceGroups.length-1);
+        group.style.visibility=active?'visible':'hidden';
+        group.style.opacity=active?'1':'0';
+        const copy=group.querySelector('.audience-copy');
+        const copyOut=index===audienceGroups.length-1?1:1-smooth((local-.88)/.12);
+        const copyIn=smooth(local/.09);
+        const copyAlpha=Math.round(copyIn*copyOut*1000)/1000;
+        copy.style.opacity=copyAlpha;
+        copy.style.transform=`translateY(${(1-copyAlpha)*16}px)`;
+        group.querySelectorAll('.audience-photo').forEach((photo,pairIndex)=>{
+          const enter=pairIndex===0?local/.17:(local-.22)/.17;
+          const out=index===audienceGroups.length-1?1:1-smooth((local-.88)/.12);
+          const alpha=Math.round(smooth(enter)*out*1000)/1000;
+          const direction=photo.classList.contains('left')?-1:1;
+          photo.style.opacity=alpha;
+          photo.style.visibility=alpha>.01?'visible':'hidden';
+          photo.style.transform=`translate3d(${(1-alpha)*direction*70}px,${(1-alpha)*16}px,0) scale(${.975+alpha*.025})`;
+        });
+      });
+    }
+    function updateJambalo(progress){
+      if(Math.abs(progress-lastJambaloProgress)<.0015)return;
+      lastJambaloProgress=progress;
+      const alpha=smooth((progress-.13)/.24);
+      jambaloText.style.opacity=alpha;
+      jambaloText.style.transform=`translateY(${(1-alpha)*18}px)`;
+      jambaloStage.style.setProperty('--scroll-progress',progress.toFixed(3));
+    }
+    function updateBrands(progress,entry){
+      if(Math.abs(progress-lastBrandsProgress)<.0015&&Math.abs(entry-lastBrandsEntry)<.0015)return;
+      lastBrandsProgress=progress;
+      lastBrandsEntry=entry;
+      const rise=(1-smooth(entry))*.62*innerHeight;
+      brandsPanel.style.transform=`translate3d(0,${rise.toFixed(1)}px,0)`;
+      const sequenceStart=.02;
+      const sequenceProgress=clamp((progress-sequenceStart)/(1-sequenceStart));
+      const segment=1/brandGroups.length;
+      brandGroups.forEach((group,index)=>{
+        const local=clamp((sequenceProgress-index*segment)/segment);
+        const inSequence=progress>=sequenceStart+index*segment && (index===brandGroups.length-1 || sequenceProgress<(index+1)*segment);
+        const openingReveal=index===0?smooth(entry/.78)*(1-smooth(progress/.12)):0;
+        const fadeIn=smooth(local/.2);
+        const fadeOut=index===brandGroups.length-1?1:1-smooth((local-.82)/.18);
+        const alpha=Math.round(Math.max(fadeIn,openingReveal)*fadeOut*1000)/1000;
+        group.style.opacity=alpha;
+        group.style.visibility=(inSequence||(index===0&&openingReveal>.01))&&alpha>.01?'visible':'hidden';
+        group.querySelectorAll('.brand-logo').forEach(logo=>{
+          const direction=logo.classList.contains('left')?-1:logo.classList.contains('right')?1:0;
+          logo.style.opacity=alpha;
+          logo.style.visibility=alpha>.01?'visible':'hidden';
+          logo.style.transform=`translate3d(${direction*(1-alpha)*76}px,${(1-alpha)*18}px,0) scale(${.94+alpha*.06})`;
+        });
+      });
+      const current=Math.min(brandGroups.length-1,Math.floor(sequenceProgress*brandGroups.length));
+      brandsStep.textContent=`${String(current+1).padStart(2,'0')} / ${String(brandGroups.length).padStart(2,'0')}`;
+      brandsProgressBar.style.width=`${Math.round(sequenceProgress*100)}%`;
+    }
+    function updateLocation(progress){
+      if(Math.abs(progress-lastLocationProgress)<.0015)return;
+      lastLocationProgress=progress;
+      const bands={eyebrow:[.015,.12],title:[.075,.27],lede:[.27,.47],action:[.48,.68]};
+      locationRevealEls.forEach(el=>{
+        const [start,end]=bands[el.dataset.locationReveal];
+        const alpha=Math.round(smooth((progress-start)/(end-start))*1000)/1000;
+        el.style.opacity=alpha;
+        el.style.visibility=alpha>.01?'visible':'hidden';
+        el.style.transform=`translateY(${(1-alpha)*18}px)`;
+        if(el.dataset.locationReveal==='action')el.classList.toggle('enabled',alpha>.9);
+      });
+    }
+    function tick(now){
+      const dt=Math.min(100,now-(lastTick||now));
+      lastTick=now;
+      shown+=(target-shown)*(1-Math.pow(1-.16,dt/16.667));
+      audienceShown+=(audienceTarget-audienceShown)*(1-Math.pow(1-.16,dt/16.667));
+      jambaloShown+=(jambaloTarget-jambaloShown)*(1-Math.pow(1-.16,dt/16.667));
+      brandsShown+=(brandsTarget-brandsShown)*(1-Math.pow(1-.16,dt/16.667));
+      brandsEntryShown+=(brandsEntryTarget-brandsEntryShown)*(1-Math.pow(1-.24,dt/16.667));
+      locationShown+=(locationTarget-locationShown)*(1-Math.pow(1-.16,dt/16.667));
+      const heroSettled=Math.abs(target-shown)<.00045;
+      const audienceSettled=Math.abs(audienceTarget-audienceShown)<.00045;
+      const jambaloSettled=Math.abs(jambaloTarget-jambaloShown)<.00045;
+      const brandsSettled=Math.abs(brandsTarget-brandsShown)<.00045;
+      const brandsEntrySettled=Math.abs(brandsEntryTarget-brandsEntryShown)<.00045;
+      const locationSettled=Math.abs(locationTarget-locationShown)<.00045;
+      if(heroSettled) shown=target;
+      if(audienceSettled) audienceShown=audienceTarget;
+      if(jambaloSettled) jambaloShown=jambaloTarget;
+      if(brandsSettled) brandsShown=brandsTarget;
+      if(brandsEntrySettled) brandsEntryShown=brandsEntryTarget;
+      if(locationSettled) locationShown=locationTarget;
+      if(heroSettled&&audienceSettled&&jambaloSettled&&brandsSettled&&brandsEntrySettled&&locationSettled){raf=null;lastTick=0;}else{raf=requestAnimationFrame(tick);}
+      if(heroVisible && video.readyState>=2 && video.duration) seek(shown*video.duration);
+      if(jambaloVisible&&jambaloVideo.readyState>=2&&jambaloVideo.duration)seekJambalo(jambaloShown*jambaloVideo.duration);
+      if(locationVisible&&locationVideo.readyState>=2&&locationVideo.duration)seekLocation(locationShown*locationVideo.duration);
+      update(shown);
+      if(audienceVisible || !audienceSettled) updateAudience(audienceShown);
+      if(jambaloVisible || !jambaloSettled) updateJambalo(jambaloShown);
+      if(brandsVisible || !brandsSettled || !brandsEntrySettled) updateBrands(brandsShown,brandsEntryShown);
+      if(locationVisible || !locationSettled) updateLocation(locationShown);
+    }
+    function onScroll(){
+      target=heroProgress();
+      audienceTarget=audienceProgress();
+      jambaloTarget=jambaloProgress();
+      brandsTarget=brandsScrollProgress();
+      brandsEntryTarget=brandsEntryProgress();
+      locationTarget=locationProgress();
+      if(reduced.matches){update(1);updateAudience(1);updateJambalo(1);updateBrands(1,1);updateLocation(1);}
+      else if((heroVisible||audienceVisible||jambaloVisible||brandsVisible||locationVisible)&&raf===null) raf=requestAnimationFrame(tick);
+    }
+    addEventListener('scroll',onScroll,{passive:true});
+    addEventListener('resize',onScroll,{passive:true});
+    if('IntersectionObserver' in window){
+      const io=new IntersectionObserver(entries=>{
+        heroVisible=entries[0].isIntersecting;
+        if(heroVisible){loadVideo();target=heroProgress();if(raf===null&&!reduced.matches)raf=requestAnimationFrame(tick);}
+      },{rootMargin:'180px 0px'});
+      io.observe(track);
+      const audienceObserver=new IntersectionObserver(entries=>{
+        audienceVisible=entries[0].isIntersecting;
+        if(audienceVisible){audienceTarget=audienceProgress();if(raf===null&&!reduced.matches)raf=requestAnimationFrame(tick);}
+      },{rootMargin:'140px 0px'});
+      audienceObserver.observe(audienceTrack);
+      const jambaloObserver=new IntersectionObserver(entries=>{
+        jambaloVisible=entries[0].isIntersecting;
+        if(jambaloVisible){loadJambaloVideo();jambaloTarget=jambaloProgress();if(raf===null&&!reduced.matches)raf=requestAnimationFrame(tick);}
+      },{rootMargin:'180px 0px'});
+      jambaloObserver.observe(jambaloTrack);
+      const brandsObserver=new IntersectionObserver(entries=>{
+        brandsVisible=entries[0].isIntersecting;
+        if(brandsVisible){brandsTarget=brandsScrollProgress();brandsEntryTarget=brandsEntryProgress();if(raf===null&&!reduced.matches)raf=requestAnimationFrame(tick);}
+        else brandsVideo.pause();
+        if(brandsVisible&&!reduced.matches)brandsVideo.play().catch(()=>{});
+      },{rootMargin:'180px 0px'});
+      brandsObserver.observe(brandsTrack);
+      const locationObserver=new IntersectionObserver(entries=>{
+        locationVisible=entries[0].isIntersecting;
+        if(locationVisible){loadLocationVideo();locationTarget=locationProgress();if(raf===null&&!reduced.matches)raf=requestAnimationFrame(tick);}
+      },{rootMargin:'180px 0px'});
+      locationObserver.observe(locationTrack);
+    }else loadVideo();
+    function motionChange(){
+      if(reduced.matches){if(raf!==null)cancelAnimationFrame(raf);raf=null;video.removeAttribute('src');video.load();jambaloVideo.removeAttribute('src');jambaloVideo.load();locationVideo.removeAttribute('src');locationVideo.load();locationLoaded=false;locationBusy=false;locationPending=null;brandsVideo.pause();stage.classList.remove('video-ready','loading');jambaloStage.classList.remove('video-ready');locationStage.classList.remove('video-ready');update(1);updateAudience(1);updateJambalo(1);updateBrands(1,1);updateLocation(1);}
+      else{target=heroProgress();audienceTarget=audienceProgress();jambaloTarget=jambaloProgress();brandsTarget=brandsScrollProgress();brandsEntryTarget=brandsEntryProgress();locationTarget=locationProgress();if(heroVisible)loadVideo();if(jambaloVisible)loadJambaloVideo();if(locationVisible)loadLocationVideo();if(brandsVisible)brandsVideo.play().catch(()=>{});if(raf===null)raf=requestAnimationFrame(tick);}
+    }
+    reduced.addEventListener?.('change',motionChange);
+    update(0);
+    audienceTarget=audienceProgress();
+    updateAudience(audienceTarget);
+    jambaloTarget=jambaloProgress();
+    updateJambalo(jambaloTarget);
+    brandsTarget=brandsScrollProgress();
+    brandsEntryTarget=brandsEntryProgress();
+    updateBrands(brandsTarget,brandsEntryTarget);
+    locationTarget=locationProgress();
+    updateLocation(locationTarget);
+    if(reduced.matches){brandsVideo.pause();update(1);updateAudience(1);updateJambalo(1);updateBrands(1,1);updateLocation(1);}
+    const revealObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('in-view');revealObserver.unobserve(entry.target);}}),{threshold:.14});
+    document.querySelectorAll('.reveal-on-view').forEach(el=>revealObserver.observe(el));
+  })();
+  </script>
+
+  <script>
+  (function(){
+    const track=document.getElementById('fundadores');if(!track)return;
+    const els=[...track.querySelectorAll('[data-f]')],photo=track.querySelector('.founders-photo');
+    const mq=matchMedia('(max-width:820px), (prefers-reduced-motion: reduce)');
+    const smooth=x=>{x=Math.min(1,Math.max(0,x));return x*x*(3-2*x);};
+    const bands={eyebrow:[.02,.12],title:[.08,.26],lede:[.24,.38],n1:[.36,.52],n2:[.42,.58],n3:[.48,.64],lede2:[.6,.72],tag:[.68,.8],actions:[.76,.9],logo:[.12,.34]};
+    let raf=0;
+    function apply(){
+      raf=0;
+      if(mq.matches){els.forEach(e=>e.style.cssText='');photo.style.transform='';return;}
+      const r=track.getBoundingClientRect(),p=Math.min(1,Math.max(0,-r.top/Math.max(1,track.offsetHeight-innerHeight)));
+      els.forEach(e=>{
+        const [s,t]=bands[e.dataset.f],a=smooth((p-s)/(t-s)),k=1-a;
+        const x=parseFloat(e.dataset.x||0),y=e.dataset.y===undefined?18:parseFloat(e.dataset.y),rot=parseFloat(e.dataset.r||0);
+        e.style.opacity=a;e.style.visibility=a>.01?'visible':'hidden';
+        e.style.transform=`translate(${x*k}px,${y*k}px) rotate(${rot*k}deg)`;
+      });
+      photo.style.transform=`scale(${1.08-.08*smooth(p/.5)})`;
+    }
+    const req=()=>{if(!raf)raf=requestAnimationFrame(apply);};
+    addEventListener('scroll',req,{passive:true});addEventListener('resize',req);
+    mq.addEventListener?.('change',req);apply();
+  })();
+  </script>
+  <script>
+  (function(){
+    const box=document.getElementById('policies'),openB=document.getElementById('policies-open'),closeB=document.getElementById('policies-close');
+    if(!box||!openB)return;
+    function open(){box.classList.add('open');box.setAttribute('aria-hidden','false');box.scrollTop=0;document.body.style.overflow='hidden';closeB.focus();}
+    function close(){box.classList.remove('open');box.setAttribute('aria-hidden','true');document.body.style.overflow='';openB.focus();}
+    openB.addEventListener('click',open);closeB.addEventListener('click',close);
+    box.addEventListener('click',e=>{if(e.target===box)close();});
+    addEventListener('keydown',e=>{if(e.key==='Escape'&&box.classList.contains('open'))close();});
+  })();
+  </script>
+</body>
+</html>
